@@ -5,6 +5,7 @@ from typing import Optional
 from .classes import *
 from util import *
 from db.table_schemas import *
+from datetime import datetime, date, time
 
 class DummyModel(BaseModel):
     id: int = 0
@@ -60,6 +61,10 @@ class Db:
         elif cls == Optional[str]:
             print("type we check is optional str")
             str_rep += "VARCHAR (255)"
+        elif cls == datetime:
+            str_rep += "DATETIME"
+        elif cls == Optional[datetime]:
+            str_rep += "DATETIME"
         return str_rep
 
     def create_table(self, name, obj_class):
@@ -185,3 +190,13 @@ if database is None:
     database.connect()
     books_table = database.create_table("books", Book)
     book_categories_table = database.create_table("book_categories", BookCategory)
+    warehouses_table = database.create_table("warehouses", Warehouse)
+    warehouse_shipments_table = database.create_table("warehouse_shipments", WarehouseShipment)
+    warehouse_shipped_items_table = database.create_table("warehouse_shipped_items", WarehouseShippedItem)
+    warehouse_stored_items_table = database.create_table("warehouse_stored_items", WarehouseStoredItem)
+    stores_table = database.create_table("stores", Store)
+    store_shipments_table = database.create_table("store_shipments", StoreShipment)
+    store_shipped_items_table = database.create_table("store_shipped_items", StoreShippedItem)
+    store_stored_items_table = database.create_table("store_stored_items", StoreStoredItem)
+    users_table = database.create_table("users", User)
+    permissions_table = database.create_table("permissions", Permission)

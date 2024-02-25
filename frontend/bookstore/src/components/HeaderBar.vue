@@ -12,6 +12,9 @@
         <router-link to="/book_categories">Book categories</router-link>
         </li>
         <li>
+        <router-link to="/stores">Stores</router-link>
+        </li>
+        <li>
         <router-link to="/cart">Cart</router-link>
         </li>
         <li>

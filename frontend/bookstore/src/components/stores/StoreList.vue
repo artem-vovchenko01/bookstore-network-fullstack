@@ -1,0 +1,50 @@
+<template>
+  <div class="item-list">
+    <div>Book store network</div>
+    <div class="item" :key="item.id" v-for="item in items.data">
+      <p>Name: {{ item.name }}</p>
+      <button @click="deleteItem($event, item.id)">Delete</button>
+      <router-link :to="{ path: this.frontendPath + '/edit', query: {storeId: item.id} }">Edit store</router-link>
+    </div>
+  </div>
+  <div>
+    <div>
+      <router-link to="this.frontendPath + /create">Add store</router-link>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      items: [],
+      frontendPath: "/stores",
+      backendPath: "/api/stores"
+    }
+  },
+  mounted() {
+    this.fetchData()
+  },
+  methods: {
+    async deleteItem(event, itemId) {
+        await window.axios.delete(this.backendPath + "/" + bookCategoryId)
+        this.fetchData()
+    },
+    async fetchData() {
+      let response = await fetch(this.backendPath + "/")
+      let data = await response.json()
+      this.items = data
+    }
+  }
+}
+</script>
+
+<style scoped>
+item {
+  width: 100em;
+  border-width: 1px;
+  border-style: solid;
+  border-color: gray;
+}
+</style>

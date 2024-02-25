@@ -7,6 +7,8 @@ import BookList from './components/BookList.vue';
 import EditBook from './components/books/EditBook.vue';
 import BookCategoryList from './components/book_categories/BookCategoryList.vue';
 import EditBookCategory from './components/book_categories/EditBookCategory.vue';
+import StoreList from './components/stores/StoreList.vue';
+import EditStore from './components/stores/EditStore.vue';
 window.axios = require('axios');
 
 const router = createRouter({
@@ -18,7 +20,11 @@ const router = createRouter({
 
         { path: "/book_categories", component: BookCategoryList }, 
         { path: "/book_categories/create", component: EditBookCategory },
-        { path: "/book_categories/edit", component: EditBookCategory }
+        { path: "/book_categories/edit", component: EditBookCategory },
+
+        { path: "/stores", component: StoreList }, 
+        { path: "/stores/create", component: EditStore },
+        { path: "/stores/edit", component: EditStore }
     ]
 });
 
@@ -31,6 +37,9 @@ app.component('edit-book', EditBook);
 
 app.component('book-category-list', BookCategoryList);
 app.component('edit-book-category', EditBookCategory);
+
+app.component('store-list', StoreList);
+app.component('edit-store', EditStore);
 
 app.use(router);
 

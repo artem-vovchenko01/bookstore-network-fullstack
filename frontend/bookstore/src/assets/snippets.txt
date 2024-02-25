@@ -1,0 +1,25 @@
+      // fetch("http://localhost/api/books/").then(function (response) {
+      //   if (!response.ok) {
+      //     console.log("Error while fetching data!")
+      //   }
+      //   return response.json()
+      // }).then((data) => {
+      //   console.log("data: ", data)
+      //   this.books = data
+      // })
+
+
+
+    //   console.log("call FETCH")
+    //   fetch("http://localhost/api/items/").then(function (response) {
+    //     if (!response.ok) {
+    //       console.log("Error while fetching data!")
+    //     }
+    //     return response.json()
+    //   }).then((data) => {
+    //     console.log("data: ", data)
+    //     this.items = data
+    //   })
+
+
+      // let books_plainobj = JSON.parse(JSON.stringify(this.books)).data

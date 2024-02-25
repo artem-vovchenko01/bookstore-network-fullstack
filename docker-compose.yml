@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:3000"
+
+  backend:
+    build: ./backend
+    command: ['bash', '-c', 'sleep 6; python main.py']
+    ports:
+      - "5000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+
+  db:
+    build: ./mariadb-custom
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_USER: bookstore
+      MARIADB_PASSWORD: bookstorepasswd
+      MARIADB_DATABASE: bookstore
+    ports:
+      - "8808:3306"
+

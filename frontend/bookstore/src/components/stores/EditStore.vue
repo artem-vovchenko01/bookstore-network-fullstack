@@ -12,8 +12,8 @@
         <input id="address" v-model.trim="item.address" type="text" />
         <br />
 
-        <label for="item.capaciy">Capaciy</label>
-        <input id="capaciy" v-model="item.capaciy" type="number" />
+        <label for="item.capacity">Capacity</label>
+        <input id="capacity" v-model="item.capacity" type="number" />
         <br />
 
         <label for="item.worksFrom">Works from</label>
@@ -25,7 +25,7 @@
         <br />
 
         <label for="item.workingDays">Working days</label>
-        <input id="workingDays" v-model.trim="item.workingDays" type="number" />
+        <input id="workingDays" v-model="item.workingDays" type="number" />
         <br />
 
         <button @click="submitItem">
@@ -41,8 +41,8 @@ export default {
     data() {
         return {
             item: {},
-            frontendPath: "/items",
-            backendPath: "/api/items",
+            frontendPath: "/stores",
+            backendPath: "/api/stores",
             editItem: false
         }
     },
@@ -61,10 +61,19 @@ export default {
         },
         async submitItem() {
             let itemData = {
-                "name": this.item.name,
+                "country": this.item.country,
+                "city": this.item.city,
+                "address": this.item.address,
+                "capacity": this.item.capacity,
+                "utilization": 0,
+                "worksFrom": this.item.worksFrom,
+                "worksUntil": this.item.worksUntil,
+                "workingDays": this.item.workingDays
             }
+            console.log("item")
+            console.log(itemData)
             if (this.editItem) {
-                item.id = this.item.id
+                itemData.id = this.item.id
                 await window.axios.put(this.backendPath + "/" + this.item.id, itemData, {
                     validateStatus: status => status >= 200
                 });

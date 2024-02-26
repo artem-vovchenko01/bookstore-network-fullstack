@@ -9,7 +9,7 @@
   </div>
   <div>
     <div>
-      <router-link to="this.frontendPath + /create">Add store</router-link>
+      <router-link :to="{ path: this.frontendPath + '/create'}">Add store</router-link>
     </div>
   </div>
 </template>
@@ -28,7 +28,8 @@ export default {
   },
   methods: {
     async deleteItem(event, itemId) {
-        await window.axios.delete(this.backendPath + "/" + bookCategoryId)
+        console.log(itemId, event)
+        await window.axios.delete(this.backendPath + "/" + itemId)
         this.fetchData()
     },
     async fetchData() {

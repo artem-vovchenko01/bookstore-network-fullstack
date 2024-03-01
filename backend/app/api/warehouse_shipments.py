@@ -20,6 +20,7 @@ def read_item():
 
 @router.post(base_path, response_model=table_class)
 def create_item(item: table_class):
+    print("w shipment: ", item)
     return svc.create_template(item)
 
 @router.get(base_path + "{item_id}", response_model=table_class)

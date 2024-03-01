@@ -1,11 +1,17 @@
 from typing import Any
+from datetime import datetime
 
 def row_to_json(row, props):
     d = {}
-    id = 0
+    idx = 0
+    print("row to json")
     for prop in props:
-        d[prop] = row[id]
-        id += 1
+        val = row[idx]
+        print(str(val) + " " + str(type(val)))
+        if type(val) is datetime:
+            val = val.isoformat()
+        d[prop] = val
+        idx += 1
     return d
 
 class DbModel:

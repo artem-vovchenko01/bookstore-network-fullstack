@@ -30,8 +30,8 @@ class Warehouse(BaseModel):
 class WarehouseShipment(BaseModel):
     id: int = 0
     created: datetime
-    arrived: datetime
-    processed: datetime
+    arrived: datetime = None
+    processed: datetime = None
     warehouseId: int
     supplier: str
 

@@ -1,31 +1,19 @@
 <template>
     <div>
-        <label for="item.country">Country</label>
+        <label for="country">Country</label>
         <input id="country" v-model.trim="item.country" type="text" />
         <br />
 
-        <label for="item.city">City</label>
+        <label for="city">City</label>
         <input id="city" v-model.trim="item.city" type="text" />
         <br />
 
-        <label for="item.address">Address</label>
+        <label for="address">Address</label>
         <input id="address" v-model.trim="item.address" type="text" />
         <br />
 
-        <label for="item.capacity">Capacity</label>
+        <label for="capacity">Capacity</label>
         <input id="capacity" v-model="item.capacity" type="number" />
-        <br />
-
-        <label for="item.worksFrom">Works from</label>
-        <input id="worksFrom" v-model="item.worksFrom" type="number" />
-        <br />
-
-        <label for="item.worksUntil">Works until</label>
-        <input id="worksUntil" v-model="item.worksUntil" type="number" />
-        <br />
-
-        <label for="item.workingDays">Working days</label>
-        <input id="workingDays" v-model="item.workingDays" type="number" />
         <br />
 
         <button @click="submitItem">
@@ -41,15 +29,15 @@ export default {
     data() {
         return {
             item: {},
-            frontendPath: "/stores",
-            backendPath: "/api/stores",
+            frontendPath: "/warehouses",
+            backendPath: "/api/warehouses",
             editItem: false
         }
     },
     async mounted() {
         if (this.$route.path === this.frontendPath + "/edit") {
             this.editItem = true
-            this.item.id = this.$route.query.storeId
+            this.item.id = this.$route.query.warehouseId
             let response = await fetch(this.backendPath + "/" + this.item.id)
             let item = await response.json()
             this.item = item
@@ -65,10 +53,7 @@ export default {
                 "city": this.item.city,
                 "address": this.item.address,
                 "capacity": this.item.capacity,
-                "utilization": 0,
-                "worksFrom": this.item.worksFrom,
-                "worksUntil": this.item.worksUntil,
-                "workingDays": this.item.workingDays
+                "utilization": 0
             }
             if (this.editItem) {
                 itemData.id = this.item.id

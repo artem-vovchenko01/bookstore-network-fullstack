@@ -106,6 +106,8 @@ class Db:
                         query += str(val) + ", "
                     elif cls == str:
                         query += "'" + val + "', "
+                    elif cls == datetime:
+                        query += "'" + val.strftime('%Y-%m-%d %H:%M:%S') + "', "
         query = query[:-2]
         query += ");"
         # self.cursor.execute(query, (item.name, item.description))

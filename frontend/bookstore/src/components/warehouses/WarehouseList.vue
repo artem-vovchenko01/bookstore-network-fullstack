@@ -4,20 +4,18 @@
     <div class="item" :key="item.id" v-for="item in items.data">
       <p>Name: {{ item.name }}</p>
       <p>Item ID: {{ item.id }}</p>
+      <p>Country: {{ item.country }}</p>
       <p>City: {{ item.city }}</p>
       <p>Address: {{ item.address }}</p>
       <p>Capacity {{ item.capacity }}</p>
       <p>Utilization: {{ item.utilization }}</p>
-      <p>Works from: {{ item.worksFrom }}</p>
-      <p>Works until: {{ item.worksUntil }}</p>
-      <p>Working days: {{ item.workingDays }}</p>
       <button @click="deleteItem($event, item.id)">Delete</button>
-      <router-link :to="{ path: this.frontendPath + '/edit', query: {storeId: item.id} }">Edit store</router-link>
+      <router-link :to="{ path: this.frontendPath + '/edit', query: {warehouseId: item.id} }">Edit warehouse</router-link>
     </div>
   </div>
   <div>
     <div>
-      <router-link :to="{ path: this.frontendPath + '/create'}">Add store</router-link>
+      <router-link :to="{ path: this.frontendPath + '/create'}">Add warehouse</router-link>
     </div>
   </div>
 </template>
@@ -27,8 +25,8 @@ export default {
   data() {
     return {
       items: [],
-      frontendPath: "/stores",
-      backendPath: "/api/stores"
+      frontendPath: "/warehouses",
+      backendPath: "/api/warehouses"
     }
   },
   mounted() {

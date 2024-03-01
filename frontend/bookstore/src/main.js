@@ -9,6 +9,10 @@ import BookCategoryList from './components/book_categories/BookCategoryList.vue'
 import EditBookCategory from './components/book_categories/EditBookCategory.vue';
 import StoreList from './components/stores/StoreList.vue';
 import EditStore from './components/stores/EditStore.vue';
+import WarehouseList from './components/warehouses/WarehouseList.vue';
+import EditWarehouse from './components/warehouses/EditWarehouse.vue';
+import WarehouseShipmentList from './components/warehouse_shipments/WarehouseShipmentList.vue';
+import EditWarehouseShipment from './components/warehouse_shipments/EditWarehouseShipment.vue';
 window.axios = require('axios');
 
 const router = createRouter({
@@ -24,7 +28,19 @@ const router = createRouter({
 
         { path: "/stores", component: StoreList }, 
         { path: "/stores/create", component: EditStore },
-        { path: "/stores/edit", component: EditStore }
+        { path: "/stores/edit", component: EditStore },
+
+        { path: "/warehouses", component: WarehouseList }, 
+        { path: "/warehouses/create", component: EditWarehouse },
+        { path: "/warehouses/edit", component: EditWarehouse },
+
+        { path: "/warehouses", component: WarehouseList }, 
+        { path: "/warehouses/create", component: EditWarehouse },
+        { path: "/warehouses/edit", component: EditWarehouse },
+
+        { path: "/warehouse_shipments", component: WarehouseShipmentList }, 
+        { path: "/warehouse_shipments/create", component: EditWarehouseShipment },
+        { path: "/warehouse_shipments/edit", component: EditWarehouseShipment }
     ]
 });
 
@@ -40,6 +56,12 @@ app.component('edit-book-category', EditBookCategory);
 
 app.component('store-list', StoreList);
 app.component('edit-store', EditStore);
+
+app.component('warehouse-list', WarehouseList);
+app.component('edit-warehouse', EditWarehouse);
+
+app.component('warehouse-shipment-list', WarehouseShipmentList);
+app.component('edit-warehouse-shipment', EditWarehouseShipment);
 
 app.use(router);
 

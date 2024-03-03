@@ -1,5 +1,10 @@
 <template>
     <div>
+        <button @click="restoreShipment()">Restore shipment</button>
+        <button v-if="warehouseShipment.processed === null" @click="cancelShipment()">Cancel shipment</button>
+        <button v-if="warehouseShipment.departed === null" @click="markShipmentAsDeparted()">Shipment departed from warehouse</button>
+        <button v-if="warehouseShipment.arrived === null && warehouseShipment.departed !== null" @click="markShipmentAsArrived()">Shipment arrived to the store</button>
+        <button v-if="warehouseShipment.processed === null && warehouseShipment.arrived !== null" @click="markShipmentAsProcessed()">Shipment was processed in the store</button>
         <label for="warehouse">Warehouse</label>
         <select v-model="warehouseShipment.warehouse" id="warehouse">
             <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse">
@@ -25,7 +30,10 @@
                     <td>{{ i.id }}</td>
                     <td>{{ ('book' in i) ? i.book.name : "loading ..." }}</td>
                     <td>{{ i.quantity }}</td>
-                    <td><button @click="deleteShippedItem($event, i.id)">Delete</button></td>
+                    <td>
+                        <button v-if="warehouseShipment.processed === null" @click="deleteShippedItem($event, i.id)">Delete</button>
+                        <button v-else disabled>Delete</button>
+                    </td>
                 </tr>
                 <tr>
                     <td>-</td>
@@ -62,6 +70,7 @@ export default {
             backendPath: "/api/warehouse_shipments/",
             warehousesPath: "/api/warehouses/",
             shippedItemsPath: "/api/warehouse_shipped_items/",
+            warehouseStoredItemsPath: "/api/warehouse_stored_items/",
             booksPath: "/api/books/",
             warehouses: [],
             books: [],
@@ -112,14 +121,77 @@ export default {
             warehouseShipment.warehouse = warehouse
         },
         async fetchShippedItems() {
-            let response = await fetch(this.shippedItemsPath)
+            let response = await fetch(this.backendPath + this.warehouseShipment.id + "/shipped_items/")
             let data = await response.json()
             this.shippedItems = data.data
-            for (let i of this.shippedItems) {
+            for (let i of data.data) {
                 let bookResponse = await fetch(this.booksPath + i.bookId)
                 let book = await bookResponse.json()
                 i.book = book
             }
+        },
+        async markShipmentAsArrived() {
+            let warehouseShipmentData = {
+                "id": this.warehouseShipment.id,
+                "created": this.warehouseShipment.created,
+                "supplier": this.warehouseShipment.supplier,
+                "warehouseId": this.warehouseShipment.warehouseId,
+                "arrived": new Date().toISOString()
+            }
+            await window.axios.put(this.backendPath + this.warehouseShipment.id, warehouseShipmentData);
+            let response = await fetch(this.backendPath + this.warehouseShipment.id)
+            let warehouseShipment = await response.json()
+            this.warehouseShipment = warehouseShipment
+            await this.fetchInitialWarehouse(this.warehouseShipment)
+        },
+        async restoreShipment() {
+            let warehouseShipmentData = {
+                "id": this.warehouseShipment.id,
+                "created": this.warehouseShipment.created,
+                "storeId": this.warehouseShipment.storeId,
+                "supplier": this.warehouseShipment.supplier,
+                "warehouseId": this.warehouseShipment.warehouseId
+            }
+            await window.axios.put(this.backendPath + this.warehouseShipment.id, warehouseShipmentData);
+            let response = await fetch(this.backendPath + this.warehouseShipment.id)
+            let warehouseShipment = await response.json()
+            this.warehouseShipment = warehouseShipment
+            await this.fetchInitialWarehouse(this.warehouseShipment)
+        },
+        async markShipmentAsProcessed() {
+            let warehouseShipmentData = {
+                "id": this.warehouseShipment.id,
+                "created": this.warehouseShipment.created,
+                "warehouseId": this.warehouseShipment.warehouseId,
+                "arrived": this.warehouseShipment.arrived,
+                "supplier": this.warehouseShipment.supplier,
+                "processed": new Date().toISOString(),
+            }
+            await window.axios.put(this.backendPath + this.warehouseShipment.id, warehouseShipmentData);
+            let response = await fetch(this.backendPath + this.warehouseShipment.id)
+            let warehouseShipment = await response.json()
+            this.warehouseShipment = warehouseShipment
+            await this.fetchInitialWarehouse(this.warehouseShipment)
+            this.updateWarehouseStoredItems()
+        },
+        async updateWarehouseStoredItems() {
+            for (let shippedItem of this.shippedItems) {
+                    let response = await fetch(this.warehouseStoredItemsPath + "/by_book/" + shippedItem.bookId)
+                    let warehouseStoredItemsByBookId = (await response.json()).data
+                    console.log("by book: ", warehouseStoredItemsByBookId)
+                    if (warehouseStoredItemsByBookId.length !== 0 ) {
+                        let warehouseStoredItem = warehouseStoredItemsByBookId[0]
+                        warehouseStoredItem.quantity = warehouseStoredItem.quantity + shippedItem.quantity
+                        await window.axios.put(this.warehouseStoredItemsPath + warehouseStoredItem.id, warehouseStoredItem)
+                    } else {
+                        let warehouseStoredItem = {
+                            "bookId": shippedItem.bookId,
+                            "quantity": shippedItem.quantity,
+                            "warehouseId": this.warehouseShipment.warehouseId
+                        }
+                        window.axios.post(this.warehouseStoredItemsPath, warehouseStoredItem)
+                    }
+                }
         },
         async submitWarehouseShipment() {
             this.warehouseShipment.warehouseId = this.warehouseShipment.warehouse.id

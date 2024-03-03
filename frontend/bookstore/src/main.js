@@ -13,6 +13,10 @@ import WarehouseList from './components/warehouses/WarehouseList.vue';
 import EditWarehouse from './components/warehouses/EditWarehouse.vue';
 import WarehouseShipmentList from './components/warehouse_shipments/WarehouseShipmentList.vue';
 import EditWarehouseShipment from './components/warehouse_shipments/EditWarehouseShipment.vue';
+import StoreShipmentList from './components/store_shipments/StoreShipmentList.vue';
+import EditStoreShipment from './components/store_shipments/EditStoreShipment.vue';
+import StoreStoredItemList from './components/store_stored_items/StoreStoredItemList.vue';
+import WarehouseStoredItemList from './components/warehouse_stored_items/WarehouseStoredItemList.vue';
 window.axios = require('axios');
 
 const router = createRouter({
@@ -40,7 +44,15 @@ const router = createRouter({
 
         { path: "/warehouse_shipments", component: WarehouseShipmentList }, 
         { path: "/warehouse_shipments/create", component: EditWarehouseShipment },
-        { path: "/warehouse_shipments/edit", component: EditWarehouseShipment }
+        { path: "/warehouse_shipments/edit", component: EditWarehouseShipment },
+
+        { path: "/store_shipments", component: StoreShipmentList }, 
+        { path: "/store_shipments/create", component: EditStoreShipment },
+        { path: "/store_shipments/edit", component: EditStoreShipment },
+
+        { path: "/store_stored_items", component: StoreStoredItemList },
+
+        { path: "/warehouse_stored_items", component: WarehouseStoredItemList },
     ]
 });
 
@@ -62,6 +74,13 @@ app.component('edit-warehouse', EditWarehouse);
 
 app.component('warehouse-shipment-list', WarehouseShipmentList);
 app.component('edit-warehouse-shipment', EditWarehouseShipment);
+
+app.component('store-shipment-list', StoreShipmentList);
+app.component('edit-store-shipment', EditStoreShipment);
+
+app.component('store-stored-item-list', StoreStoredItemList);
+
+app.component('warehouse-stored-item-list', WarehouseStoredItemList);
 
 app.use(router);
 

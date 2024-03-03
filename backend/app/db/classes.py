@@ -61,11 +61,11 @@ class Store(BaseModel):
 class StoreShipment(BaseModel):
     id: int = 0
     created: datetime
-    departed: datetime
-    arrived: datetime
-    processed: datetime
+    departed: datetime = None
+    arrived: datetime = None
+    processed: datetime = None
     storeId: int
-    warehouseId: str
+    warehouseId: int
 
 class StoreShippedItem(BaseModel):
     id: int = 0

@@ -18,6 +18,10 @@ base_path = "/warehouse_shipments/"
 def read_item():
     return svc.get_all_template()
 
+@router.get(base_path + "{item_id}" + "/shipped_items/", response_model=table_class)
+def get_shipped_items(item_id: int):
+    return svc.get_items_by_id_template(db.get_table_by_name("warehouse_shipped_items"), "warehouseShipmentId", item_id)
+
 @router.post(base_path, response_model=table_class)
 def create_item(item: table_class):
     print("w shipment: ", item)

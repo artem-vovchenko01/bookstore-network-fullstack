@@ -22,9 +22,12 @@ def tuple_to_db_object(tup, schema):
     model = DbModel()
     for i in range(len(schema)):
         setattr(model, schema[i], tup[i])
+    print(tup, schema)
     return model
 
 def rows_to_json(rows, props):
+    print("rows:", rows)
+    print("props:", props)
     if type(rows) == tuple:
         return row_to_json(rows, props)
     elif type(rows) == list:

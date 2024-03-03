@@ -15,7 +15,16 @@
         <router-link to="/stores">Stores</router-link>
         </li>
         <li>
+        <router-link to="/store_stored_items">Store items</router-link>
+        </li>
+        <li>
         <router-link to="/warehouses">Warehouses</router-link>
+        </li>
+        <li>
+        <router-link to="/warehouse_stored_items">Warehouse items</router-link>
+        </li>
+        <li>
+        <router-link to="/store_shipments">Store shipments</router-link>
         </li>
         <li>
         <router-link to="/warehouse_shipments">Warehouse shipments</router-link>

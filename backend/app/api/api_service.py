@@ -10,15 +10,18 @@ class ApiService:
         self.schema = schema
 
     def get_all_template(self):
-        print("before get all")
         items = self.database.get_all(self.table)
-        print("after get all")
-        print(items)
-        print(f"get all request completed {self.table}")
         print(items)
         if items is None:
             raise HTTPException(status_code=404, detail="Items were not found")
         return JSONResponse(content=rows_to_json(items, self.schema))
+
+    def get_items_by_id_template(self, child_table, col_name, id):
+        items = self.database.get_items_by_id(child_table, col_name, id)
+        print(items)
+        if items is None:
+            raise HTTPException(status_code=404, detail="Items were not found")
+        return JSONResponse(content=rows_to_json(items, child_table.schema))
 
     def create_template(self, item):
         item.id = self.database.insert(self.table, item)

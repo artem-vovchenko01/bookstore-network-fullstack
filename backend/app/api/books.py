@@ -15,23 +15,6 @@ table_class = Book
 base_path = "/books/"
 picture_path = "/data/books/covers"
 
-@router.post("/files/")
-def upload_file_bytes(file_bytes: bytes = File(...), key1: str = Form(...), key2: str = Form(...)):
-    print(type(file_bytes))
-    print("key1: ", key1)
-    print("key2: ", key2)
-    with open("/file.jpg", 'wb') as file:
-        file.write(file_bytes)
-    return {'file_bytes': str(file_bytes)}
-
-@router.get("/files/")
-def get_file():
-    file_path = "/file.jpg"
-    try:
-        return FileResponse(path=file_path, filename="desired_filename.jpg")
-    except Exception as e:
-        raise HTTPException(status_code=404, detail=f"File not found: {e}")
-
 @router.get(base_path, response_model=table_class)
 def read_item():
     return svc.get_all_template()

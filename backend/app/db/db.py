@@ -21,6 +21,7 @@ class DbTable:
     def __init__(self, name, obj_class):
         self.name = name
         self.obj_class = obj_class
+        self.schema = get_schema_by_type(obj_class)
 
 class Db:
     def __init__(self):
@@ -73,6 +74,7 @@ class Db:
         table = DbTable(name, obj_class)
         cols = obj_class.__annotations__
         command = "CREATE TABLE IF NOT EXISTS " + name + " ("
+        table_name = name
         for name, cls in cols.items():
             command += " " + name + " " + self.get_type_sql_str(cls)
             if name == 'id':
@@ -80,10 +82,9 @@ class Db:
             command += ","
         command = command[:-1] 
         command += ");"
-        print("Creating a table with command:")
+        print(f"Creating table {table_name}")
         print(command)
         cursor.execute(command)
-        print("Command ran")
         self.tables.append(table)
         return table
  
@@ -110,11 +111,9 @@ class Db:
                         query += "'" + val.strftime('%Y-%m-%d %H:%M:%S') + "', "
         query = query[:-2]
         query += ");"
-        # self.cursor.execute(query, (item.name, item.description))
-        print("Executing query: ")
+        print(f"Inserting {obj} into {table.name}")
         print(query)
         cursor.execute(query)
-        print("Ran execution")
         self.conn.commit()
         item_id = cursor.lastrowid
         cursor.close()
@@ -127,6 +126,9 @@ class Db:
         except:
             obj = tuple_to_db_object(obj, get_schema_by_type(table.obj_class))
         item = self.get(table, obj.id)
+        print("===========================================")
+        print(obj)
+        print("===========================================")
         if item is None:
             self.insert(table, obj, at_id=obj.id)
             return obj
@@ -134,6 +136,7 @@ class Db:
         query = "UPDATE " + table.name + " SET "
         annotations = table.obj_class.__annotations__
         for name, cls in annotations.items():
+            print(name, cls)
             val = getattr(obj, name)
             if val is None:
                 query += name + " = NULL, "
@@ -142,10 +145,11 @@ class Db:
                     query += name + " = " + str(val) + ", "
                 elif cls == str:
                     query += name + " = " +  "'" + val + "'" + ", "
+                elif cls == datetime:
+                    query += name + " = " +  "'" + val.strftime('%Y-%m-%d %H:%M:%S') + "'" + ", "
         query = query[:-2]
         query += " WHERE id = " + str(obj.id) + ";"
-        # self.cursor.execute(query, (item.name, item.description))
-        print("Executing put query: ")
+        print(f"Put {obj} into {table.name}")
         print(query)
         cursor.execute(query)
         print("Ran execution")
@@ -156,7 +160,7 @@ class Db:
     def remove(self, table, id):
         cursor = self.conn.cursor()
         query = "DELETE FROM " + table.name + " WHERE id = " + str(id) + ";"
-        print("Removing item with query")
+        print(f"Remove object {id} from {table.name}")
         print(query)
         cursor.execute(query)
         self.conn.commit()
@@ -165,11 +169,11 @@ class Db:
     def get(self, table, id):
         cursor = self.conn.cursor()
         query = "SELECT * FROM " + table.name + " WHERE id = " + str(id)  + ";"
-        print("Ruuning GET query")
+        print(f"Get object {id} from {table.name}")
         print(query)
         cursor.execute(query)
         item = cursor.fetchone()
-        print("Received item")
+        print("Got item")
         print(item)
         cursor.close()
         return item
@@ -177,14 +181,29 @@ class Db:
     def get_all(self, table):
         cursor = self.conn.cursor()
         query = "SELECT * FROM " + table.name + ";"
-        print("Ruuning GET query (whole table)")
+        print(f"Get all from {table.name}")
         print(query)
         cursor.execute(query)
         items = cursor.fetchall()
-        print("Received items")
+        print("Got items")
         print(items)
         cursor.close()
         return items
+
+    def get_items_by_id(self, child_table, col_name, id):
+        cursor = self.conn.cursor()
+        query = f"SELECT * FROM {child_table.name} WHERE {col_name} = {id};"
+        print(f"Get items from {child_table.name} by {col_name} {id}")
+        print(query)
+        cursor.execute(query)
+        items = cursor.fetchall()
+        print("Got items")
+        print(items)
+        cursor.close()
+        return items
+
+def get_table_by_name(name):
+    return list(filter(lambda t: t.name == name, database.tables))[0]
 
 database = None
 if database is None:

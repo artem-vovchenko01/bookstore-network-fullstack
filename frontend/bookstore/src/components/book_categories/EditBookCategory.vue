@@ -5,8 +5,7 @@
         <br />
 
         <button @click="submitBookCategory">
-            <p v-if="editBookCategory">Save changes</p>
-            <p v-else>Create</p>
+            {{ editBookCategory ? "Save changes" : "Create" }}                
         </button>
         <br />
     </div>

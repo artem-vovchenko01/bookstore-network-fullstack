@@ -20,7 +20,7 @@ def read_item():
 
 @router.get(base_path + "{item_id}" + "/shipped_items/", response_model=table_class)
 def get_shipped_items(item_id: int):
-    return svc.get_items_by_id_template(db.get_table_by_name("store_shipped_items"), "storeShipmentId", item_id)
+    return svc.filter_template(db.get_table_by_name("store_shipped_items"), ("storeShipmentId", item_id))
 
 @router.post(base_path, response_model=table_class)
 def create_item(item: table_class):

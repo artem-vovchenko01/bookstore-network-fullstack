@@ -201,6 +201,29 @@ class Db:
         print(items)
         cursor.close()
         return items
+    
+    def filter(self, table, *filters):
+        print("table: ", table)
+        print("filters: ", filters)
+        cursor = self.conn.cursor()
+        query = f"SELECT * FROM {table.name} WHERE " 
+        for filter in filters:
+            col = filter[0]
+            val = filter[1]
+            query += f" {col} = {val} AND"
+        query = query[:-4] + ";"
+        print(f"Get items from {table.name} with filtering")
+        print(f"filters: {filters}")
+        print(query)
+        print("before exec")
+        cursor.execute(query)
+        print("after exec")
+        items = cursor.fetchall()
+        print("after fetch")
+        print("Got items")
+        print(items)
+        cursor.close()
+        return items
 
 def get_table_by_name(name):
     return list(filter(lambda t: t.name == name, database.tables))[0]

@@ -18,9 +18,9 @@ base_path = "/warehouse_stored_items/"
 def read_item():
     return svc.get_all_template()
 
-@router.get(base_path + "by_book/" + "{book_id}", response_model=table_class)
-def get_by_book_id(book_id: int):
-    return svc.get_items_by_id_template(db.get_table_by_name("warehouse_stored_items"), "bookId", book_id)
+@router.get(base_path + "by_warehouse/{warehouse_id}/by_book/{book_id}", response_model=table_class)
+def get_by_book_and_warehouse(warehouse_id: int, book_id: int):
+    return svc.filter_template(db.get_table_by_name("warehouse_stored_items"), ("bookId", book_id), ("warehouseId", warehouse_id))
 
 @router.post(base_path, response_model=table_class)
 def create_item(item: table_class):

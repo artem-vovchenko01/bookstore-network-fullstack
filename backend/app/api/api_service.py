@@ -16,12 +16,12 @@ class ApiService:
             raise HTTPException(status_code=404, detail="Items were not found")
         return JSONResponse(content=rows_to_json(items, self.schema))
 
-    def get_items_by_id_template(self, child_table, col_name, id):
-        items = self.database.get_items_by_id(child_table, col_name, id)
+    def filter_template(self, table, *filters):
+        items = self.database.filter(table, *filters)
         print(items)
         if items is None:
             raise HTTPException(status_code=404, detail="Items were not found")
-        return JSONResponse(content=rows_to_json(items, child_table.schema))
+        return JSONResponse(content=rows_to_json(items, table.schema))
 
     def create_template(self, item):
         item.id = self.database.insert(self.table, item)

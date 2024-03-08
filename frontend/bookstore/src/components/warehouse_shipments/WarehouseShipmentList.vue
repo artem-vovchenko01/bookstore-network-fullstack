@@ -9,12 +9,16 @@
       <p v-if="('warehouse' in item)">Warehouse: {{ item.warehouse.id + ", "  + item.warehouse.country + ", " + item.warehouse.city + ", " + item.warehouse.address }}</p>
       <p>Supplier: {{ item.supplier }}</p>
       <button @click="deleteItem($event, item.id)">Delete</button>
-      <router-link :to="{ path: this.frontendPath + '/edit', query: {warehouseShipmentId: item.id} }">Edit warehouse shipment</router-link>
+      <button>
+        <router-link :to="{ path: this.frontendPath + '/edit', query: {warehouseShipmentId: item.id} }">Edit warehouse shipment</router-link>
+      </button>
     </div>
   </div>
   <div>
     <div>
-      <router-link :to="{ path: this.frontendPath + '/create'}">Add warehouse shipment</router-link>
+      <button>
+        <router-link :to="{ path: this.frontendPath + '/create'}">Add warehouse shipment</router-link>
+      </button>
     </div>
   </div>
 </template>

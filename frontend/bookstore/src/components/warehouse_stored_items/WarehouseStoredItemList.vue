@@ -4,6 +4,7 @@
     <div class="warehouse-stored-item" :key="warehouseStoredItem.id" v-for="warehouseStoredItem in warehouseStoredItems.data">
       <p>Book title: {{ ('book' in warehouseStoredItem) ? warehouseStoredItem.book.name : "loading ..." }}</p>
       <p>Available: {{ ('book' in warehouseStoredItem) ? warehouseStoredItem.quantity : "loading ..." }}</p>
+      <p>Warehouse: {{ ('warehouse' in warehouseStoredItem) ? warehouseStoredItem.warehouse.country + ", " + warehouseStoredItem.warehouse.city + ", " + warehouseStoredItem.warehouse.address : "loading ..." }}</p>
     </div>
   </div>
 </template>
@@ -15,7 +16,8 @@ export default {
       warehouseStoredItems: [],
       frontendPath: "/warehouse_stored_items/",
       backendPath: "/api/warehouse_stored_items/",
-      booksPath: "/api/books/"
+      booksPath: "/api/books/",
+      warehousesPath: "/api/warehouses/"
     }
   },
   created() {
@@ -27,13 +29,16 @@ export default {
       let data = await response.json()
       this.warehouseStoredItems = data
       console.log("data: ", data)
-      await this.fetchBooks()
+      await this.fetchLinkedItems()
     },
-    async fetchBooks() {
+    async fetchLinkedItems() {
       for (let warehouseStoredItem of this.warehouseStoredItems.data) {
         let response = await fetch(this.booksPath + warehouseStoredItem.bookId)
         let data = await response.json()
         warehouseStoredItem.book = data
+        response = await fetch(this.warehousesPath + warehouseStoredItem.warehouseId)
+        let warehouseData = await response.json()
+        warehouseStoredItem.warehouse = warehouseData
       }
     }
   }

@@ -53,8 +53,7 @@
         </div>
 
         <button @click="submitWarehouseShipment">
-            <p v-if="editWarehouseShipment">Save changes</p>
-            <p v-else>Create</p>
+            {{ editWarehouseShipment ? "Save changes" : "Create" }}                
         </button>
         <br />
     </div>

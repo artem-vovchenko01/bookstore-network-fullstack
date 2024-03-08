@@ -35,7 +35,7 @@
                     <td>{{ ('book' in i) ? i.book.name : "loading ..." }}</td>
                     <td>{{ i.quantity }}</td>
                     <td>
-                        <button v-if="storeShipment.departed === null" @click="deleteShippedItem($event, i.id)">Delete</button>
+                        <button v-if="storeShipment.departed === null" @click="deleteShippedItem($event, i)">Delete</button>
                         <button v-else disabled>Delete</button>
                     </td>
                 </tr>
@@ -57,8 +57,7 @@
         </div>
 
         <button @click="submitStoreShipment">
-            <p v-if="editStoreShipment">Save changes</p>
-            <p v-else>Create</p>
+            {{ editStoreShipment ? "Save changes" : "Create" }}                
         </button>
         <br />
     </div>
@@ -76,6 +75,7 @@ export default {
             warehousesPath: "/api/warehouses/",
             shippedItemsPath: "/api/store_shipped_items/",
             storeStoredItemsPath: "/api/store_stored_items/",
+            warehouseStoredItemsPath: "/api/warehouse_stored_items/",
             booksPath: "/api/books/",
             books: [],
             shippedItems: [],
@@ -111,8 +111,17 @@ export default {
                 "quantity": this.newShippedItem.quantity,
                 "storeShipmentId": this.storeShipment.id
             }
-            await window.axios.post(this.shippedItemsPath, shippedItemData);
-            this.fetchShippedItems()
+            let response = await fetch(this.warehouseStoredItemsPath + "by_warehouse/" + this.storeShipment.warehouseId + "/by_book/" + shippedItemData.bookId)
+            let rsp = await response.json()
+            let warehouseStoredItem = rsp.data[0]
+            warehouseStoredItem.quantity = warehouseStoredItem.quantity - shippedItemData.quantity
+            if (warehouseStoredItem.quantity < 0) {
+                alert("Not enough items in the warehouse!")
+            } else {
+                await window.axios.post(this.shippedItemsPath, shippedItemData);
+                await window.axios.put(this.warehouseStoredItemsPath + warehouseStoredItem.id, warehouseStoredItem)
+                this.fetchShippedItems()
+            }
         },
         async fetchBooks() {
             let response = await fetch(this.booksPath)
@@ -248,8 +257,13 @@ export default {
                     }
                 }
         },
-        async deleteShippedItem(event, itemId) {
-            await window.axios.delete(this.shippedItemsPath + itemId)
+        async deleteShippedItem(event, item) {
+            await window.axios.delete(this.shippedItemsPath + item.id)
+            let response = await fetch(this.warehouseStoredItemsPath + "by_warehouse/" + this.storeShipment.warehouseId + "/by_book/" + item.bookId)
+            let rsp = await response.json()
+            let warehouseStoredItem = rsp.data[0]
+            warehouseStoredItem.quantity = warehouseStoredItem.quantity + item.quantity
+            await window.axios.put(this.warehouseStoredItemsPath + warehouseStoredItem.id, warehouseStoredItem)
             this.fetchShippedItems()
         },
         async cancelShipment() {

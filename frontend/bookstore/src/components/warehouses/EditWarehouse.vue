@@ -17,8 +17,7 @@
         <br />
 
         <button @click="submitItem">
-            <p v-if="editItem">Save changes</p>
-            <p v-else>Create</p>
+            {{ editItem ? "Save changes" : "Create" }}                
         </button>
         <br />
     </div>

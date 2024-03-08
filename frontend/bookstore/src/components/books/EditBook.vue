@@ -3,9 +3,8 @@
         <img height="50" v-if="book.imageUrl != null" :src="book.imageUrl" alt="Fetched Image" />
         <br />
 
-        <label>Cover image
-            <input type="file" @change="handleFileUpload($event)" />
-        </label>
+        <label for="input-file" class="custom-file-upload">Cover image</label>
+        <input id="input-file" class="file-upload-class" type="file" @change="handleFileUpload($event)" />
         <br />
 
         <label for="name">Name</label>
@@ -49,8 +48,7 @@
         <br />
 
         <button @click="submitBook">
-            <p v-if="editBook">Save changes</p>
-            <p v-else>Create</p>
+            {{ editBook ? "Save changes" : "Create" }}                
         </button>
         <br />
     </div>

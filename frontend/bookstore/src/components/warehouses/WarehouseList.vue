@@ -10,12 +10,16 @@
       <p>Capacity {{ item.capacity }}</p>
       <p>Utilization: {{ item.utilization }}</p>
       <button @click="deleteItem($event, item.id)">Delete</button>
-      <router-link :to="{ path: this.frontendPath + '/edit', query: {warehouseId: item.id} }">Edit warehouse</router-link>
+      <button>
+        <router-link :to="{ path: this.frontendPath + '/edit', query: {warehouseId: item.id} }">Edit warehouse</router-link>
+      </button>
     </div>
   </div>
   <div>
     <div>
-      <router-link :to="{ path: this.frontendPath + '/create'}">Add warehouse</router-link>
+      <button>
+        <router-link :to="{ path: this.frontendPath + '/create'}">Add warehouse</router-link>
+      </button>
     </div>
   </div>
 </template>

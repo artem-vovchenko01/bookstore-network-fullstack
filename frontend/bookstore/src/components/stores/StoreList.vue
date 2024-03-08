@@ -12,12 +12,16 @@
       <p>Works until: {{ item.worksUntil }}</p>
       <p>Working days: {{ item.workingDays }}</p>
       <button @click="deleteItem($event, item.id)">Delete</button>
-      <router-link :to="{ path: this.frontendPath + '/edit', query: {storeId: item.id} }">Edit store</router-link>
+      <button>
+        <router-link :to="{ path: this.frontendPath + '/edit', query: {storeId: item.id} }">Edit store</router-link>
+      </button>
     </div>
   </div>
   <div>
     <div>
-      <router-link :to="{ path: this.frontendPath + '/create'}">Add store</router-link>
+      <button>
+        <router-link :to="{ path: this.frontendPath + '/create'}">Add store</router-link>
+      </button>
     </div>
   </div>
 </template>

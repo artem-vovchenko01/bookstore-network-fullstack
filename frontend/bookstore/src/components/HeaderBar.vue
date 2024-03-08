@@ -52,19 +52,31 @@ export default {
 a.router-link-active {
   color: yellow;
 }
-  .header ul {
-    background-color: #2c3e50;
+.header {
+    padding: 10px 20px;
+    background-color: #003366;
+    color: #FFFFFF;
+    text-align: center; /* Ensures text and inline-elements are centered */
+}
+
+nav {
+  display: inline-block; /* Makes the nav container inline for text-align to affect it */
+}
+
+nav ul {
+    list-style-type: none;
     margin: 0;
     padding: 0;
-    list-style-type: none;
-  }
-  .header li {
-    margin: 1rem;
-    float: left;
-    list-style-type: none;
-  }
-  nav {
-    width: 100%;
-    display: block;
-  }
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers flex items on the main axis */
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li:last-child {
+    margin-right: 0;
+}
 </style>

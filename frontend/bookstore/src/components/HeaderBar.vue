@@ -33,6 +33,12 @@
         <router-link to="/cart">Cart</router-link>
         </li>
         <li>
+        <router-link to="/permissions">Permissions</router-link>
+        </li>
+        <li>
+        <router-link to="/users">Users</router-link>
+        </li>
+        <li>
         <router-link to="/profile">Profile</router-link>
         </li>
       </ul>

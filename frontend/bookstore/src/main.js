@@ -17,6 +17,9 @@ import StoreShipmentList from './components/store_shipments/StoreShipmentList.vu
 import EditStoreShipment from './components/store_shipments/EditStoreShipment.vue';
 import StoreStoredItemList from './components/store_stored_items/StoreStoredItemList.vue';
 import WarehouseStoredItemList from './components/warehouse_stored_items/WarehouseStoredItemList.vue';
+import UserList from './components/users/UserList.vue';
+import EditUser from './components/users/EditUser.vue';
+import PermissionList from './components/permissions/PermissionList.vue';
 window.axios = require('axios');
 
 const router = createRouter({
@@ -53,6 +56,11 @@ const router = createRouter({
         { path: "/store_stored_items", component: StoreStoredItemList },
 
         { path: "/warehouse_stored_items", component: WarehouseStoredItemList },
+
+        { path: "/users", component: UserList },
+        { path: "/users/edit", component: EditUser },
+
+        { path: "/permissions", component: PermissionList },
     ]
 });
 

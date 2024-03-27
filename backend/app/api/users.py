@@ -13,10 +13,35 @@ router = APIRouter()
 svc = ApiService(db.users_table, user_schema)
 table_class = User
 base_path = "/users/"
+picture_path = "/data/users/profile-pics"
 
 @router.get(base_path, response_model=table_class)
 def read_item():
     return svc.get_all_template()
+
+@router.get(base_path + "{item_id}/profile-pic/")
+def get_picture(item_id: int):
+    file_path = f"{picture_path}/{item_id}.jpg"
+    try:
+        return FileResponse(path=file_path, filename=f"{item_id}.jpg")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"File not found: {e}")
+
+@router.post(base_path + "{item_id}/profile-pic/")
+def upload_picture(item_id: int, cover: bytes = File(...)):
+    print("item id: ", item_id)
+    coverPath = picture_path + "/" + str(item_id) + ".jpg"
+    with open(coverPath, 'wb') as file:
+        file.write(cover)
+    item = svc.raw_get_template(item_id)
+    print("got raw item: ", item)
+    print("item: ", item)
+    item_temp = list(item)
+    item_temp[10] = coverPath
+    item = list(item_temp)
+    print("item: ", item)
+    svc.update_template(item_id, item)
+    return {'file_bytes': str(cover)}
 
 @router.post(base_path, response_model=table_class)
 def create_item(item: table_class):

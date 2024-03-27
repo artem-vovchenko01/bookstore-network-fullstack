@@ -58,6 +58,7 @@ const router = createRouter({
         { path: "/warehouse_stored_items", component: WarehouseStoredItemList },
 
         { path: "/users", component: UserList },
+        { path: "/users/create", component: EditUser },
         { path: "/users/edit", component: EditUser },
 
         { path: "/permissions", component: PermissionList },

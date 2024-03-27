@@ -7,15 +7,15 @@
         <input id="input-file" class="file-upload-class" type="file" @change="handleFileUpload($event)" />
         <br />
 
-        <label for="name">Username</label>
+        <label for="username">Username</label>
         <input id="username" v-model.trim="user.username" type="text" />
         <br />
 
-        <label for="user.password">Password</label>
+        <label for="password">Password</label>
         <input @input="validate($event)" id="password" v-model.number="user.password" type="password" />
         <br />
 
-        <label for="description">Name</label>
+        <label for="name">Name</label>
         <input @input="validate($event)" id="name" v-model.number="user.name" type="text" />
         <br />
 
@@ -23,23 +23,23 @@
         <input @input="validate($event)" id="surname" v-model.number="user.surname" type="text" />
         <br />
 
-        <label for="user.age">Age</label>
+        <label for="age">Age</label>
         <input @input="validate($event)" id="age" v-model.number="user.age" type="text" />
         <br />
 
-        <label for="user.email">Email</label>
+        <label for="email">Email</label>
         <input @input="validate($event)" id="email" v-model.number="user.email" type="text" />
         <br />
 
-        <label for="user.phone">Phone</label>
+        <label for="phone">Phone</label>
         <input @input="validate($event)" id="phone" v-model.number="user.phone" type="text" />
         <br />
 
-        <label for="user.country">Country</label>
+        <label for="country">Country</label>
         <input @input="validate($event)" id="country" v-model.number="user.country" type="number" />
         <br />
 
-        <label for="user.city">City</label>
+        <label for="city">City</label>
         <input @input="validate($event)" id="city" v-model.number="user.city" type="number" />
         <br />
 
@@ -55,21 +55,18 @@ export default {
     data() {
         return {
             user: {},
-            imageUrls: {},
             editUser: false,
             backendPath: "/api/users/",
             frontendPath: "/users/"
         }
     },
     async mounted() {
-        await this.fetchBookCategories()
         if (this.$route.path === "/users/edit") {
             this.editUser = true
-            this.user.id = this.$route.query.bookId
+            this.user.id = this.$route.query.userId
             let response = await fetch(this.backendPath + this.user.id)
             let user = await response.json()
             this.user = user
-            await this.fetchInitialCategory(user)
             this.fetchImage(user)
         }
     },
@@ -77,70 +74,58 @@ export default {
         validate(event) {
             console.log("VALIDATING", event)
         },
-        async fetchBookCategories() {
-            let response = await fetch("http://localhost/api/book_categories/")
-            let data = await response.json()
-            this.bookCategories = data.data
-        },
-        async fetchInitialCategory(user) {
-            let response = await fetch("http://localhost/api/book_categories/" + user.categoryId)
-            let category = await response.json()
-            user.category = category
-        },
         async fetchImage(user) {
-            let user = user.id
+            let userId = user.id
             try {
-                let response = await fetch(this.backendPath + bookId + '/cover/');
+                let response = await fetch(this.backendPath + userId + '/profile-pic/');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 let blob = await response.blob();
                 let url = URL.createObjectURL(blob);
-                this.imageUrls[bookId] = url;
                 this.user.imageUrl = url;
                 this.user.image = blob;
             } catch (error) {
                 console.error('Error fetching image:', error);
             }
         },
-        async submitBook() {
+        async submitUser() {
             let formData = new FormData();
-            formData.append('cover', this.user.image)
-            let bookData = {
+            formData.append('profile-pic', this.user.image)
+            let userData = {
                 "name": this.user.name,
-                "description": this.user.description,
-                "categoryId": this.user.category.id,
-                "author": this.user.author,
-                "pages": this.user.pages,
-                "publisher": this.user.publisher,
-                "type": this.user.type,
-                "lang": this.user.lang,
-                "year": this.user.year
+                "username": this.user.username,
+                "password": this.user.password,
+                "surname": this.user.surname,
+                "age": this.user.age,
+                "email": this.user.email,
+                "phone": this.user.phone,
+                "country": this.user.country,
+                "city": this.user.city
             }
             let responseData = null
             if (this.editUser) {
-                bookData.id = this.user.id
-                responseData = await window.axios.put(this.backendPath + this.user.id, bookData, {
+                userData.id = this.user.id
+                responseData = await window.axios.put(this.backendPath + this.user.id, userData, {
                     validateStatus: status => status >= 200
                 });
             } else {
-                responseData = await window.axios.post(this.backendPath, bookData, {
+                responseData = await window.axios.post(this.backendPath, userData, {
                     validateStatus: status => status >= 200
                 });
             }
-            let bookId = 0;
-            if (this.editBook) {
-                bookId = this.user.id
+            let userId = 0;
+            if (this.editUser) {
+                userId = this.user.id
             } else {
-                bookId = responseData.data.id;
+                userId = responseData.data.id;
             }
-            await window.axios.post(this.backendPath + bookId + "/cover/", formData)
+            await window.axios.post(this.backendPath + userId + "/profile-pic/", formData)
             this.$router.push(this.frontendPath)
         },
         handleFileUpload(event) {
             this.user.image = event.target.files[0]
             let url = URL.createObjectURL(this.user.image);
-            this.imageUrls[this.user.id] = url;
             this.user.imageUrl = url;
         }
     }
@@ -148,7 +133,7 @@ export default {
 </script>
 
 <style scoped>
-book_item {
+user_item {
     width: 100em;
     border-width: 1px;
     border-style: solid;

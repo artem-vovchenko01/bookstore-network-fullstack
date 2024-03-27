@@ -7,6 +7,7 @@ RUN pip install uvicorn[standard]
 RUN pip install mariadb
 RUN pip install python-multipart
 RUN mkdir -p /data/books/covers
+RUN mkdir -p /data/users/profile-pics
 
 COPY ./app .
 

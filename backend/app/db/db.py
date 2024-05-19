@@ -6,6 +6,7 @@ from .classes import *
 from util import *
 from db.table_schemas import *
 from datetime import datetime, date, time
+import pickle
 
 class DummyModel(BaseModel):
     id: int = 0
@@ -166,6 +167,19 @@ class Db:
         self.conn.commit()
         cursor.close()
 
+    def remove_all(self, table):
+        cursor = self.conn.cursor()
+        query = "DELETE FROM " + table.name + ";"
+        print(f"Removed all objects from {table.name}")
+        print(query)
+        cursor.execute(query)
+        self.conn.commit()
+        cursor.close()
+
+    def clear_db(self):
+        for table in self.tables:
+            self.remove_all(table)
+
     def get(self, table, id):
         cursor = self.conn.cursor()
         query = "SELECT * FROM " + table.name + " WHERE id = " + str(id)  + ";"
@@ -189,6 +203,44 @@ class Db:
         print(items)
         cursor.close()
         return items
+
+    def backup(self, filename):
+        backup_schema_dict = {}
+        backup_data_dict = {}
+        for table in self.tables:
+            backup_schema_dict[table.name] = table
+            backup_data_dict[table.name] = self.get_all(table)
+        print("Starting backup process ...")
+        print("Backup schema dict")
+        print(backup_schema_dict)
+        print("Backup data dict")
+        print(backup_data_dict)
+        with open(filename, "wb") as f:
+            pickle.dump([backup_schema_dict, backup_data_dict], f)
+    
+    def restore(self, filename):
+        backup_schema_dict = {}
+        backup_data_dict = {}
+        print("Starting restore process ...")
+        with open(filename, "rb") as f:
+            loaded = pickle.load(f)
+            print("Loaded: ")
+            print(loaded)
+            backup_schema_dict, backup_data_dict = loaded
+            print("Schema dict")
+            print(backup_schema_dict)
+            print("Data dict")
+            print(backup_data_dict)
+        self.clear_db()
+        self.tables = [] 
+        print("Tables are emptied")
+        for table_name in backup_schema_dict.keys():
+            table = backup_schema_dict[table_name]
+            data = backup_data_dict[table_name]
+            print(f"Appending table {table.name}")
+            self.tables.append(table)
+            for row in data:
+                self.put(table, row)
 
     def get_items_by_id(self, child_table, col_name, id):
         cursor = self.conn.cursor()

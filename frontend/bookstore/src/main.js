@@ -20,6 +20,7 @@ import WarehouseStoredItemList from './components/warehouse_stored_items/Warehou
 import UserList from './components/users/UserList.vue';
 import EditUser from './components/users/EditUser.vue';
 import PermissionList from './components/permissions/PermissionList.vue';
+import AdminPage from './components/admin/AdminPage.vue';
 window.axios = require('axios');
 
 const router = createRouter({
@@ -62,6 +63,8 @@ const router = createRouter({
         { path: "/users/edit", component: EditUser },
 
         { path: "/permissions", component: PermissionList },
+
+        { path: "/admin", component: AdminPage }
     ]
 });
 

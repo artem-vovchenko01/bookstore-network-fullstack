@@ -36,10 +36,13 @@
         <router-link to="/permissions">Permissions</router-link>
         </li>
         <li>
-        <router-link to="/users">Users</router-link>
+        <router-link to="/users">Usrs</router-link>
         </li>
         <li>
-        <router-link to="/profile">Profile</router-link>
+        <router-link to="/profile">Prfl</router-link>
+        </li>
+        <li>
+        <router-link to="/admin">Admin</router-link>
         </li>
       </ul>
     </nav>

@@ -19,6 +19,16 @@ picture_path = "/data/books/covers"
 def read_item():
     return svc.get_all_template()
 
+@router.get(base_path + "dbbackup/{id}")
+def backup_db(id: int):
+    database.backup("backup" + ".pkl")
+    return svc.get_sample()
+
+@router.get(base_path + "dbrestore/{id}")
+def backup_db(id: int):
+    database.restore("backup" + ".pkl")
+    return svc.get_sample()
+
 @router.get(base_path + "{item_id}/cover/")
 def get_picture(item_id: int):
     file_path = f"{picture_path}/{item_id}.jpg"

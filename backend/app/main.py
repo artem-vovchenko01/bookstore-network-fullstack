@@ -12,6 +12,7 @@ from api import store_shipments
 from api import store_stored_items
 from api import users
 from api import permissions
+from api import admin
 
 app = FastAPI()
 
@@ -27,6 +28,7 @@ app.include_router(store_shipments.router)
 app.include_router(store_stored_items.router)
 app.include_router(users.router)
 app.include_router(permissions.router)
+app.include_router(admin.router)
 
 if __name__ == "__main__":
     import uvicorn

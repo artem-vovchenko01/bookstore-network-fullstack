@@ -16,6 +16,10 @@ class ApiService:
             raise HTTPException(status_code=404, detail="Items were not found")
         return JSONResponse(content=rows_to_json(items, self.schema))
 
+    @classmethod
+    def get_sample(cls):
+        return JSONResponse(content=["success"])
+
     def filter_template(self, table, *filters):
         items = self.database.filter(table, *filters)
         print(items)
